@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @guest.name
+p
+  strong Email:
+  = @guest.email
+p
+  strong Address:
+  = @guest.address
+p
+  strong Phone:
+  = @guest.phone
+
+=> link_to 'Edit', edit_guest_path(@guest)
+'|
+=< link_to 'Back', guests_path

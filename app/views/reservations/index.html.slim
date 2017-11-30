@@ -1,0 +1,26 @@
+- cache @reservations do
+  h1 Listing reservations
+
+  table.table
+    thead
+      tr
+        th Start at
+        th End at
+        th Usage
+        th
+        th
+        th
+
+    tbody
+      - @reservations.each do |reservation|
+        tr
+          td = reservation.start_at
+          td = reservation.end_at
+          td = reservation.usage
+          td = link_to 'Show', reservation, class: "btn btn-primary"
+          td = link_to 'Edit', edit_reservation_path(reservation), class: "btn btn-primary"
+          td = link_to 'Destroy', reservation, data: { confirm: 'Are you sure?' }, method: :delete, class: "btn btn-danger"
+
+  br
+
+  = link_to 'New Reservation', new_reservation_path

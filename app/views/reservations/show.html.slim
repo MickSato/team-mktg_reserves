@@ -1,0 +1,15 @@
+- cache @reservation do
+  p#notice = notice
+
+  p
+    strong Start at:
+    = @reservation.start_at
+  p
+    strong End at:
+    = @reservation.end_at
+  p
+    strong Usage:
+    = @reservation.usage
+
+  = link_to 'Edit', edit_reservation_path(@reservation), class: "btn btn-primary"
+  = link_to 'Back', reservations_path, class: "btn btn-primary"

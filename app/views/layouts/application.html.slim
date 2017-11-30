@@ -1,0 +1,29 @@
+html
+  head
+    title Reserves
+    = csrf_meta_tags
+
+    = stylesheet_link_tag    'application', media: 'all'
+    = javascript_include_tag 'application'
+
+  body.container-fluid
+    nav.header.navbar.navbar-default
+      div.navbar-header
+        button.navbar-toggle.collapsed data-toggle="collapse" data-target="#navbar"
+        = link_to "Reserves", "/", class: "navbar-brand"
+      - if logged_in?
+        div#navbar.collapse.navbar-collapse
+          ul.nav.navbar-nav.navbar-right
+            - if can? :create, Reservation
+              li
+                = link_to('新規予約申請', new_reservation_path)
+            - if can? :read, Reservation
+              li
+                = link_to('申請一覧', reservations_path)
+            li
+              = link_to('パスワード変更', edit_user_path(current_user))
+            li
+              = link_to('Logout', logout_path, method: :delete)
+    div.main.row
+      div.col-sm-12.contents
+        = yield
