@@ -5,6 +5,7 @@ class Ability
     user ||= User.new
     if user.admin?
       can :manage, :all
+      cannot :create, Reservation
     end
 
     if user.member?

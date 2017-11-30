@@ -2,7 +2,7 @@ h1 Editing user
 
 == render 'form'
 
-- if can? :read, User
-  = link_to 'Back to list', users_path, class: "btn btn-primary"
+- if can? :manage, User
+  = link_to 'Back to list', users_path, class: "btn btn-default"
 - else
-  = link_to 'Back', root_path, class: "btn btn-primary"
+  = link_to 'Back', root_path, class: "btn btn-default"
