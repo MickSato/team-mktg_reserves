@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :guests
   resources :reservations
   get 'home/index'
+  get '/events', to: "home#events", as: :events
 
   root to: 'home#index'
   
