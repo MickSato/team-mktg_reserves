@@ -17,10 +17,10 @@
 
 module Selenium
   module WebDriver
-    module PhantomJS
+    module Safari
 
       #
-      # Driver implementation for PhantomJS.
+      # Driver implementation for Safari.
       # @api private
       #
 
@@ -28,23 +28,14 @@ module Selenium
         include DriverExtensions::TakesScreenshot
 
         def initialize(opts = {})
-          WebDriver.logger.deprecate 'Selenium support for PhantomJS', 'headless Chrome/Firefox or HTMLUnit'
-
-          opts[:desired_capabilities] ||= Remote::Capabilities.phantomjs
+          opts[:desired_capabilities] ||= Remote::Capabilities.safari
 
           unless opts.key?(:url)
-            driver_path = opts.delete(:driver_path) || PhantomJS.driver_path
+            driver_path = opts.delete(:driver_path) || Safari.driver_path
+            driver_opts = opts.delete(:driver_opts) || {}
             port = opts.delete(:port) || Service::DEFAULT_PORT
 
-            opts[:driver_opts] ||= {}
-            if opts.key? :args
-              WebDriver.logger.deprecate ':args', "driver_opts: {args: #{opts[:args]}}"
-              opts[:driver_opts][:args] = opts.delete(:args)
-            elsif opts[:desired_capabilities]['phantomjs.cli.args']
-              opts[:driver_opts][:args] = opts[:desired_capabilities]['phantomjs.cli.args']
-            end
-
-            @service = Service.new(driver_path, port, opts.delete(:driver_opts))
+            @service = Service.new(driver_path, port, driver_opts)
             @service.start
             opts[:url] = @service.uri
           end
@@ -54,17 +45,13 @@ module Selenium
           super(@bridge, listener: listener)
         end
 
-        def browser
-          :phantomjs
-        end
-
         def quit
           super
         ensure
           @service.stop if @service
         end
 
-      end # Bridge
-    end # PhantomJS
+      end # Driver
+    end # Safari
   end # WebDriver
 end # Selenium
