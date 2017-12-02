@@ -10,15 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171130073825) do
+ActiveRecord::Schema.define(version: 20171202143330) do
 
   create_table "guests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "reservation_id"
     t.string "name"
-    t.string "email"
+    t.string "email", null: false
     t.string "address"
     t.string "phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "url_key"
+    t.index ["reservation_id"], name: "index_guests_on_reservation_id"
+    t.index ["url_key"], name: "index_guests_on_url_key", unique: true
   end
 
   create_table "reservations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -28,6 +32,7 @@ ActiveRecord::Schema.define(version: 20171130073825) do
     t.string "usage"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status", default: 0
     t.index ["user_id"], name: "index_reservations_on_user_id"
   end
 
@@ -42,5 +47,6 @@ ActiveRecord::Schema.define(version: 20171130073825) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "guests", "reservations"
   add_foreign_key "reservations", "users"
 end

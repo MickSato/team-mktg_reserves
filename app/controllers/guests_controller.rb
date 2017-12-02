@@ -1,45 +1,20 @@
 class GuestsController < ApplicationController
-  before_action :set_guest, only: [:show, :edit, :update, :destroy]
+  before_action :set_guest, only: [:destroy]
+  skip_before_action :require_login, except: [:index, :destroy]
 
-  # GET /guests
-  # GET /guests.json
   def index
     @guests = Guest.all
   end
 
-  # GET /guests/1
-  # GET /guests/1.json
   def show
   end
 
-  # GET /guests/new
-  def new
-    @guest = Guest.new
-  end
-
-  # GET /guests/1/edit
   def edit
+    @guest = Guest.find_by_url_key(params[:id])
   end
 
-  # POST /guests
-  # POST /guests.json
-  def create
-    @guest = Guest.new(guest_params)
-
-    respond_to do |format|
-      if @guest.save
-        format.html { redirect_to @guest, notice: 'Guest was successfully created.' }
-        format.json { render :show, status: :created, location: @guest }
-      else
-        format.html { render :new }
-        format.json { render json: @guest.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /guests/1
-  # PATCH/PUT /guests/1.json
   def update
+    @guest = Guest.find_by_url_key(params[:id])
     respond_to do |format|
       if @guest.update(guest_params)
         format.html { redirect_to @guest, notice: 'Guest was successfully updated.' }
@@ -51,8 +26,6 @@ class GuestsController < ApplicationController
     end
   end
 
-  # DELETE /guests/1
-  # DELETE /guests/1.json
   def destroy
     @guest.destroy
     respond_to do |format|
