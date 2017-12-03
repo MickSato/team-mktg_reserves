@@ -1,5 +1,5 @@
 class GuestsController < ApplicationController
-  before_action :set_guest, only: [:destroy]
+  before_action :set_guest, only: [:update, :destroy]
   skip_before_action :require_login, except: [:index, :destroy]
 
   def index
@@ -14,15 +14,11 @@ class GuestsController < ApplicationController
   end
 
   def update
-    @guest = Guest.find_by_url_key(params[:id])
-    respond_to do |format|
-      if @guest.update(guest_params)
-        format.html { redirect_to @guest, notice: 'Guest was successfully updated.' }
-        format.json { render :show, status: :ok, location: @guest }
-      else
-        format.html { render :edit }
-        format.json { render json: @guest.errors, status: :unprocessable_entity }
-      end
+    @guest = Guest.find(params[:id])
+    if @guest.update(guest_params)
+      redirect_to :thanks
+    else
+      render :edit
     end
   end
 

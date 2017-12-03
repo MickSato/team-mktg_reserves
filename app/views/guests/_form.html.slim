@@ -6,16 +6,17 @@
         - @guest.errors.full_messages.each do |message|
           li = message
 
-  .field
+  .field.form-group
     = f.label :name
-    = f.text_field :name
-  .field
+    = f.text_field :name, class: "form-control"
+  .field.form-group
     = f.label :email
-    = f.text_field :email
-  .field
+    = f.text_field :email, class: "form-control", readonly: true
+  .field.form-group
     = f.label :address
-    = f.text_field :address
-  .field
+    = f.text_field :address, class: "form-control"
+  .field.form-group
     = f.label :phone
-    = f.text_field :phone
-  .actions = f.submit
+    = f.text_field :phone, class: "form-control"
+  .actions
+    = f.submit class: "btn btn-primary"

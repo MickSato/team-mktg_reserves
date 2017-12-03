@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :reservations
   get 'home/index'
   get '/events', to: "home#events", as: :events
+  get 'thanks', to: "guests#thanks", as: :thanks
 
   root to: 'home#index'
   
