@@ -1,6 +1,7 @@
 - cache @reservations do
+  = javascript_pack_tag 'reservations', 'data-turbolinks-track': 'reload'
   h1 Listing reservations
-
+  = react_component("Reservations")
   table.table
     thead
       tr
