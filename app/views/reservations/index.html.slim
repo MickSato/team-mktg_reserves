@@ -1,22 +1,5 @@
 - cache @reservations do
-  = javascript_pack_tag 'reservations', 'data-turbolinks-track': 'reload'
   h1 Listing reservations
-  = react_component("Reservations")
-  table.table
-    thead
-      tr
-        th Usage
-        th Start at
-        th End at
-        th
-        th
+  = react_component("Reservations", reservations: @reservations)
 
-    tbody
-      - @reservations.each do |reservation|
-        tr
-          td = link_to reservation.usage, reservation
-          td = reservation.start_at
-          td = reservation.end_at
-          td = link_to 'Edit', edit_reservation_path(reservation), class: "btn btn-primary"
-          td = link_to 'Destroy', reservation, data: { confirm: 'Are you sure?' }, method: :delete, class: "btn btn-danger"
 
