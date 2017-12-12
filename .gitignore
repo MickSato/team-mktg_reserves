@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore bundler gems.
+vendor/bundle
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
@@ -20,3 +23,12 @@
 /public/packs
 /public/packs-test
 /node_modules
+
+# Ignore other unneeded files.
+doc/
+*.swp
+*~
+.project
+.DS_Store
+.idea
+.secret
