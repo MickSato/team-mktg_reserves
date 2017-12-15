@@ -40,17 +40,17 @@ class ReservationList extends React.Component {
             })}
           </tbody>
         </table>
-        <Modal open={this.props.show_detail}>
-          <ReservationForm reservation={this.props.reservation} readonly={true} />
+        <Modal open={this.props.show_detail} handleClose={this.props.closeModal}>
+          <ReservationForm prefix="detail" reservation={this.props.reservation} readonly={true} />
         </Modal>
-        <Modal open={this.props.show_edit}>
-          <ReservationForm reservation={this.props.reservation} submitButton="更新" handleSubmit={this.props.edit} />
+        <Modal open={this.props.show_edit} handleClose={this.props.closeModal}>
+          <ReservationForm prefix="edit" reservation={this.props.reservation} submitButton="更新" handleSubmit={this.props.edit} />
         </Modal>
-        <Modal open={this.props.show_create} submitButton="登録" handleSubmit={this.props.create} >
-          <ReservationForm />
+        <Modal open={this.props.show_create} handleClose={this.props.closeModal}>
+          <ReservationForm prefix="create" submitButton="登録" handleSubmit={this.props.create} />
         </Modal>
-        <Modal open={this.props.show_destroy}>
-          <ReservationForm reservation={this.props.reservation} readonly={true} handleSubmit={this.props.destroy} submitButton="削除" />
+        <Modal open={this.props.show_destroy} handleClose={this.props.closeModal}>
+          <ReservationForm prefix="destroy" reservation={this.props.reservation} readonly={true} handleSubmit={this.props.destroy} submitButton="削除" />
         </Modal>
       </div>
     );
@@ -112,6 +112,13 @@ Reservation.propTypes = {
   openDetail: PropTypes.func,
   openEdit: PropTypes.func,
   openDestroy: PropTypes.func
+}
+
+ReservationForm.propTypes = {
+  reservation: PropTypes.object,
+  prefix: PropTypes.string,
+  submitButton: PropTypes.string,
+  handleSubmit: PropTypes.func
 }
 
 
