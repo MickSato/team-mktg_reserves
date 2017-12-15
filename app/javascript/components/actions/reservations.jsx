@@ -1,20 +1,27 @@
 /* Actionsの実装 */
 
 // Action名の定義
+const SHOW_DETAIL = 'SHOW_DETAIL';
 const SHOW_CREATE = 'SHOW_CREATE';
 const CREATE = 'CREATE';
 const SHOW_EDIT = 'SHOW_EDIT';
 const EDIT = 'EDIT';
 const SHOW_DESTROY = 'SHOW_DESTROY';
 const DESTROY = 'DESTROY';
+const CLOSE_MODAL = 'CLOSE_MODAL';
 const SET_INIT = 'SET_INIT';
 
 // Action Creators
-function show_create(reservation) {
+function showDetail(reservation) {
   // Action
   return {
-    type: SHOW_CREATE,
+    type: SHOW_DETAIL,
     reservation
+  };
+}
+function showCreate() {
+  return {
+    type: SHOW_CREATE
   };
 }
 function create(reservation) {
@@ -23,7 +30,7 @@ function create(reservation) {
     reservation
   };
 }
-function show_edit(reservation) {
+function showEdit(reservation) {
   return {
     type: SHOW_EDIT,
     reservation
@@ -35,7 +42,7 @@ function edit(reservation) {
     reservation
   };
 }
-function show_destroy(reservation) {
+function showDestroy(reservation) {
   return {
     type: SHOW_DESTROY,
     reservation
@@ -47,7 +54,12 @@ function destroy(reservation) {
     reservation
   };
 }
-function set_init(reservations) {
+function closeModal() {
+  return {
+    type: CLOSE_MODAL
+  };
+}
+function setInit(reservations) {
   return {
     type: SET_INIT,
     reservations

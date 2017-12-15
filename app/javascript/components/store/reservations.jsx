@@ -3,7 +3,7 @@ import { createStore } from 'redux';
 const initialState = {
   reservations: null,
   reservation: null,
-  show_modal: false,
+  show_detail: false,
   show_create: false,
   show_edit: false,
   show_destroy: false

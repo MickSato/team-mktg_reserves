@@ -1,12 +1,15 @@
 // SET_COUNTERを追記
-import { SHOW_CREATE, CREATE, SHOW_EDIT, EDIT, SHOW_DESTROY, DESTROY, SET_INIT } from '../actions/reservations';
+import { SHOW_DETAIL, SHOW_CREATE, CREATE, SHOW_EDIT, EDIT, SHOW_DESTROY, DESTROY, CLOSE_MODAL, SET_INIT } from '../actions/reservations';
 
 export default function reducer(state, action) {
   switch (action.type) {
-  case SHOW_CREATE:
+  case SHOW_DETAIL:
     return Object.assign({}, state, {
       reservation: action.reservation,
-      show_modal: true,
+      show_detail: true
+    });
+  case SHOW_CREATE:
+    return Object.assign({}, state, {
       show_create: true
     });
   case CREATE:
@@ -14,12 +17,11 @@ export default function reducer(state, action) {
     //ajaxで登録&登録後のreservationを受け取る
     return Object.assign({}, state, {
       reservations: state.reservations.concat(reservation),
-      show_modal: false
+      show_create: false
     });
   case SHOW_EDIT:
     return Object.assign({}, state, {
       reservation: action.reservation,
-      show_modal: true,
       show_edit: true
     });
   case EDIT:
@@ -31,12 +33,11 @@ export default function reducer(state, action) {
     });
     return Object.assign({}, state, {
       reservations: reservations,
-      show_modal: false
+      show_edit: false
     });
   case SHOW_DESTROY:
     return Object.assign({}, state, {
       reservation: action.reservation,
-      show_modal: true,
       show_destroy: true
     });
   case DESTROY:
@@ -47,7 +48,14 @@ export default function reducer(state, action) {
     });
     return Object.assign({}, state, {
       reservations: reservations,
-      show_modal: false
+      show_destroy: false
+    });
+  case CLOSE_MODAL:
+    return Object.assign({}, state, {
+      show_detail: false,
+      show_edit: false,
+      show_create: false,
+      show_destroy: false
     });
   case SET_INIT:
     return Object.assign({}, state, {
