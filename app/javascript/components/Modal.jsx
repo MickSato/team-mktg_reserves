@@ -7,7 +7,9 @@ class Modal extends React.Component {
         <div>
           <div className="modal_background" onClick={this.props.handleClose}/>
           <div className="modal_popout">
-            {this.props.children}
+            <div className="modal_content">
+              {this.props.children}
+            </div>
           </div>
         </div>
       );

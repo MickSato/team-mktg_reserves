@@ -1,20 +1,21 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { Provider, connect } from 'react-redux';
-import Modal from "./Modal.jsx"
 import { store } from './store/reservations';
-import * as Actions from '../actions/reservations';
+import * as Actions from './actions/reservations';
+import Modal from "./Modal"
 import { bindActionCreators } from 'redux';
+import PopDatePicker from './PopDatePicker'
 
 
-class Reservations extends React.Component {
+export default class Reservations extends React.Component {
   componentWillMount() {
     store.dispatch(Actions.setInit(this.props.reservations));
   }
   render() {
     return (
       <Provider store={store}>
-        <ReservationList />
+        <ReservationContainer />
       </Provider>
     );
   }
@@ -41,16 +42,16 @@ class ReservationList extends React.Component {
           </tbody>
         </table>
         <Modal open={this.props.show_detail} handleClose={this.props.closeModal}>
-          <ReservationForm prefix="detail" reservation={this.props.reservation} readonly={true} />
+          <ReservationForm prefix="detail" reservation={this.props.reservation} readOnly={true} />
         </Modal>
         <Modal open={this.props.show_edit} handleClose={this.props.closeModal}>
-          <ReservationForm prefix="edit" reservation={this.props.reservation} submitButton="更新" handleSubmit={this.props.edit} />
+          <ReservationForm prefix="edit" reservation={this.props.reservation} submitButton="更新" handleSubmit={this.props.edit} popout_start_at={this.props.popout_start_at} popout_end_at={this.props.popout_end_at} selectStartAt={this.props.selectStartAt} selectedStartAt={this.props.selectedStartAt} selectEndAt={this.props.selectEndAt} selectedEndAt={this.props.selectedEndAt} onChangeUsage={this.props.onChangeUsage} />
         </Modal>
         <Modal open={this.props.show_create} handleClose={this.props.closeModal}>
-          <ReservationForm prefix="create" submitButton="登録" handleSubmit={this.props.create} />
+          <ReservationForm prefix="create" submitButton="登録" handleSubmit={this.props.create} popout_start_at={this.props.popout_start_at} popout_end_at={this.props.popout_end_at} selectStartAt={this.props.selectStartAt} selectedStartAt={this.props.selectedStartAt} selectEndAt={this.props.selectEndAt} selectedEndAt={this.props.selectedEndAt}  onChangeUsage={this.props.onChangeUsage}/>
         </Modal>
         <Modal open={this.props.show_destroy} handleClose={this.props.closeModal}>
-          <ReservationForm prefix="destroy" reservation={this.props.reservation} readonly={true} handleSubmit={this.props.destroy} submitButton="削除" />
+          <ReservationForm prefix="destroy" reservation={this.props.reservation} readOnly={true} handleSubmit={this.props.destroy} submitButton="削除" />
         </Modal>
       </div>
     );
@@ -61,11 +62,11 @@ class Reservation extends React.Component {
   render () {
     return (
       <tr>
-        <td onClick={this.props.openDetail(this.props.reservation)}>{this.props.reservation.usage}</td>
+        <td onClick={(e) => this.props.openDetail(this.props.reservation)}>{this.props.reservation.usage}</td>
         <td>{this.props.reservation.start_at}</td>
         <td>{this.props.reservation.end_at}</td>
-        <td><span className="btn btn-primary" onClick={this.props.openEdit(this.props.reservation)}>編集</span></td>
-        <td><span className="btn btn-primary" onClick={this.props.openDestroy(this.props.reservation)}>削除</span></td>
+        <td><span className="btn btn-primary" onClick={(e) => this.props.openEdit(this.props.reservation)}>編集</span></td>
+        <td><span className="btn btn-primary" onClick={(e) => this.props.openDestroy(this.props.reservation)}>削除</span></td>
       </tr>
     );
   }
@@ -73,38 +74,31 @@ class Reservation extends React.Component {
 
 class ReservationForm extends React.Component {
   render () {
-    const submit = (!this.props.submitButton ? null : <div className="action"><input type="submit" value={this.props.submitButton} className="btn btn-primary" /></div>);
+    const submit = (!this.props.submitButton ? null : <div className="action"><input type="button" value={this.props.submitButton} className="btn btn-primary" onClick={this.props.handleSubmit}/></div>);
     return (
-      <form onSubmit={this.props.handleSubmit}>
+      <div>
         <div className="field form-group">
-          <label for={this.props.prefix + "_start_at"}>予約開始日</label>
-          <input type="text" id={this.props.prefix + "_start_at"} className="datepicker form-control" />
+          <label htmlFor={this.props.prefix + "_start_at"}>予約開始日</label>
+          <input type="text" id={this.props.prefix + "_start_at"} className="form-control" readOnly={true} value={this.props.reservation.start_at} onFocus={this.props.selectStartAt} />
+          <PopDatePicker onSelect={ (year, month, day) => this.props.selectedStartAt(this.props.reservation, year, month, day)} popout={this.props.popout_start_at}/>
         </div>
         <div className="field form-group">
-          <label for={this.props.prefix + "_end_at"}>予約終了日</label>
-          <input type="text" id={this.props.prefix + "_end_at"} className="datepicker form-control" />
+          <label htmlFor={this.props.prefix + "_end_at"}>予約終了日</label>
+          <input type="text" id={this.props.prefix + "_end_at"} className="form-control" readOnly={true} value={this.props.reservation.end_at} onFocus={this.props.selectEndAt}/>
+          <PopDatePicker onSelect={ (year, month, day) => this.props.selectedEndAt(this.props.reservation, year, month, day)} popout={this.props.popout_end_at}/>
         </div>
         <div className="field form-group">
-          <label for={this.props.prefix + "_usage"}>用途</label>
-          <input type="text" id={this.props.prefix + "_usage"} className="form-control" />
+          <label htmlFor={this.props.prefix + "_usage"}>用途</label>
+          <input type="text" id={this.props.prefix + "_usage"} className="form-control" readOnly={this.props.readOnly} value={this.props.reservation.usage} onChange={(e) => this.props.onChangeUsage(this.props.reservation, e.target.value)}/>
         </div>
         <div className="field form-group">
-          <label for={this.props.prefix + "_guests"}>宿泊者</label>
-          <select id={this.props.prefix + "_guests"} className="form-control select2" multiple={true} />
+          <label htmlFor={this.props.prefix + "_guests"}>宿泊者</label>
+          <select id={this.props.prefix + "_guests"} className="form-control select2" multiple={true} readOnly={this.props.readOnly} />
         </div>
         {submit}
-      </form>
+      </div>
     );
   }
-}
-
-Reservations.propTypes = {
-  reservations: PropTypes.array,
-  reservation: PropTypes.object,
-  show_detail: PropTypes.bool,
-  show_create: PropTypes.bool,
-  show_edit: PropTypes.bool,
-  show_destroy: PropTypes.bool
 }
 
 Reservation.propTypes = {
@@ -118,7 +112,15 @@ ReservationForm.propTypes = {
   reservation: PropTypes.object,
   prefix: PropTypes.string,
   submitButton: PropTypes.string,
-  handleSubmit: PropTypes.func
+  handleSubmit: PropTypes.func,
+  readOnly: PropTypes.bool,
+  popout_start_at: PropTypes.bool,
+  popout_end_at: PropTypes.bool,
+  selectStartAt: PropTypes.func,
+  selectedStartAt: PropTypes.func,
+  selectEndAt: PropTypes.func,
+  selectedEndAt: PropTypes.func,
+  onChangeUsage: PropTypes.func
 }
 
 
@@ -129,7 +131,9 @@ function mapStateToProps(state) {
     show_detail: state.show_detail,
     show_create: state.show_create,
     show_edit: state.show_edit,
-    show_destroy: state.show_destroy
+    show_destroy: state.show_destroy,
+    popout_start_at: state.popout_start_at,
+    popout_end_at: state.popout_end_at
   }
 }
 
@@ -137,4 +141,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Actions, dispatch);
 }
   
-export default connect(mapStateToProps, mapDispatchToProps)(ReservationList);
+const ReservationContainer = connect(mapStateToProps, mapDispatchToProps)(ReservationList);

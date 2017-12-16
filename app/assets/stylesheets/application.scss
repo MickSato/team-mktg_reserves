@@ -25,15 +25,25 @@ body{
   -vendor-animation-duration: 0.1s;
   display: block;
   z-index: 8888;
-  height: 200px;
-  width: 300px;
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  -webkit-transform: translateY(-50%) translateX(-50%);
   background: white;
+  border-radius: 10px;
+  box-shadow: 5px 5px;
+  
+  .modal_content{
+    margin: 10px;
+  }
+}
+
+.pop_datepicker{
+  z-index: 8889;
+  position: absolute;
+  background: white;
+  border: solid 1px gray;
   border-radius: 10px;
   box-shadow: 5px 5px;
 }

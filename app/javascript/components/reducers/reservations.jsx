@@ -1,5 +1,5 @@
 // SET_COUNTERを追記
-import { SHOW_DETAIL, SHOW_CREATE, CREATE, SHOW_EDIT, EDIT, SHOW_DESTROY, DESTROY, CLOSE_MODAL, SET_INIT } from '../actions/reservations';
+import { SHOW_DETAIL, SHOW_CREATE, CREATE, SHOW_EDIT, EDIT, SHOW_DESTROY, DESTROY, CLOSE_MODAL, SET_INIT, SELECT_START_AT, SELECTED_START_AT, SELECT_END_AT, SELECTED_END_AT, CHANGE_USAGE } from '../actions/reservations';
 
 export default function reducer(state, action) {
   switch (action.type) {
@@ -60,6 +60,29 @@ export default function reducer(state, action) {
   case SET_INIT:
     return Object.assign({}, state, {
       reservations: action.reservations
+    });
+  case SELECT_START_AT:
+    return Object.assign({}, state, {
+      popout_start_at: true
+    });
+  case SELECTED_START_AT:
+    return Object.assign({}, state, {
+      popout_start_at: false
+    });
+  case SELECT_END_AT:
+    return Object.assign({}, state, {
+      popout_end_at: true
+    });
+  case SELECTED_END_AT:
+    return Object.assign({}, state, {
+      popout_end_at: false
+    });
+  case CHANGE_USAGE:
+    var reservation =Object.assign({}, state.reservation, {usage: action.usage});
+    console.log(3);
+    console.log(reservation);
+    return Object.assign({}, state, {
+      reservation: Object.assign({}, state.reservation, {usage: action.usage})
     });
   default:
     return state;
