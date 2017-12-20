@@ -15,6 +15,13 @@ export const SELECTED_START_AT = 'SELECTED_START_AT';
 export const SELECT_END_AT = 'SELECT_END_AT';
 export const SELECTED_END_AT = 'SELECTED_END_AT';
 export const CHANGE_USAGE = 'CHANGE_USAGE';
+export const CHANGE_GUEST = 'CHANGE_GUEST';
+export const ADD_GUEST = 'ADD_GUEST';
+
+//非同期Actionの定義
+export const CREATE_RESERVATION = 'CREATE_RESERVATION';
+export const SUCCESS_RESERVATION = 'SUCCESS_RESERVATION';
+export const FAILUER_RESERVATION = 'FAILUER_RESERVATION';
 
 // Action Creators
 export function showDetail(reservation) {
@@ -72,15 +79,16 @@ export function setInit(reservations) {
   };
 }
 export function selectStartAt() {
-  console.log(1);
   return {
     type: SELECT_START_AT
   };
 }
-export function selectedStartAt(reservation, year, month, day) {
-  console.log(8);
+export function selectedStartAt(year, month, day) {
   return {
-    type: SELECTED_START_AT
+    type: SELECTED_START_AT,
+    year: year,
+    month: month,
+    day: day
   };
 }
 export function selectEndAt() {
@@ -88,14 +96,42 @@ export function selectEndAt() {
     type: SELECT_END_AT
   };
 }
-export function selectedEndAt(reservation, year, month, day) {
+export function selectedEndAt(year, month, day) {
   return {
-    type: SELECTED_END_AT
+    type: SELECTED_END_AT,
+    year: year,
+    month: month,
+    day: day
   };
 }
-export function onChangeUsage(reservation, usage) {
+export function onChangeUsage(usage) {
   return {
     type: CHANGE_USAGE,
     usage: usage
+  };
+}
+export function onChangeGuest(idx, guest) {
+  return {
+    type: CHANGE_GUEST,
+    idx: idx,
+    guest: guest
+  };
+}
+export function addGuest() {
+  return {
+    type: ADD_GUEST
+  };
+}
+export function successReservation(response) {
+  return {
+    type: SUCCESS_RESERVATION,
+    response: response
+  };
+}
+
+export function failureReservation(error) {
+  return {
+    type: FAILUER_RESERVATION,
+    error: error
   };
 }

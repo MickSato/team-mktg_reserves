@@ -1,5 +1,8 @@
 import reducer from '../reducers/reservations';
-import { createStore } from 'redux';
+import createSagaMiddleware from 'redux-saga'
+import { createStore, applyMiddleware } from 'redux';
+import rootSaga from '../sagas'
+
 const initialState = {
   reservations: null,
   reservation: null,
@@ -10,4 +13,8 @@ const initialState = {
   popout_start_at: false,
   popout_end_at: false,
 };
-export const store = createStore(reducer, initialState);
+// Saga ミドルウェアを作成する
+const sagaMiddleware = createSagaMiddleware()
+export const store = createStore(reducer, initialState, applyMiddleware(sagaMiddleware));
+
+sagaMiddleware.run(rootSaga);

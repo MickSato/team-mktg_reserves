@@ -25,6 +25,9 @@ class ReservationList extends React.Component {
   render () {
     return (
       <div>
+        <div className="pull-right">
+          <button className="btn btn-primary" onClick={this.props.showCreate}>新規予約申請</button>
+        </div>
         <table className="table">
           <thead>
             <tr>
@@ -42,16 +45,16 @@ class ReservationList extends React.Component {
           </tbody>
         </table>
         <Modal open={this.props.show_detail} handleClose={this.props.closeModal}>
-          <ReservationForm prefix="detail" reservation={this.props.reservation} readOnly={true} />
+          <ReservationForm reservation={this.props.reservation} readOnly={true} />
         </Modal>
         <Modal open={this.props.show_edit} handleClose={this.props.closeModal}>
-          <ReservationForm prefix="edit" reservation={this.props.reservation} submitButton="更新" handleSubmit={this.props.edit} popout_start_at={this.props.popout_start_at} popout_end_at={this.props.popout_end_at} selectStartAt={this.props.selectStartAt} selectedStartAt={this.props.selectedStartAt} selectEndAt={this.props.selectEndAt} selectedEndAt={this.props.selectedEndAt} onChangeUsage={this.props.onChangeUsage} />
+          <ReservationForm reservation={this.props.reservation} submitButton="更新" handleSubmit={this.props.edit} popout_start_at={this.props.popout_start_at} popout_end_at={this.props.popout_end_at} selectStartAt={this.props.selectStartAt} selectedStartAt={this.props.selectedStartAt} selectEndAt={this.props.selectEndAt} selectedEndAt={this.props.selectedEndAt} onChangeUsage={this.props.onChangeUsage} onChangeGuest={this.props.onChangeGuest} onAddGuest={this.props.addGuest} />
         </Modal>
         <Modal open={this.props.show_create} handleClose={this.props.closeModal}>
-          <ReservationForm prefix="create" submitButton="登録" handleSubmit={this.props.create} popout_start_at={this.props.popout_start_at} popout_end_at={this.props.popout_end_at} selectStartAt={this.props.selectStartAt} selectedStartAt={this.props.selectedStartAt} selectEndAt={this.props.selectEndAt} selectedEndAt={this.props.selectedEndAt}  onChangeUsage={this.props.onChangeUsage}/>
+          <ReservationForm reservation={this.props.reservation} submitButton="登録" handleSubmit={this.props.create} popout_start_at={this.props.popout_start_at} popout_end_at={this.props.popout_end_at} selectStartAt={this.props.selectStartAt} selectedStartAt={this.props.selectedStartAt} selectEndAt={this.props.selectEndAt} selectedEndAt={this.props.selectedEndAt}  onChangeUsage={this.props.onChangeUsage} onChangeGuest={this.props.onChangeGuest} onAddGuest={this.props.addGuest}/>
         </Modal>
         <Modal open={this.props.show_destroy} handleClose={this.props.closeModal}>
-          <ReservationForm prefix="destroy" reservation={this.props.reservation} readOnly={true} handleSubmit={this.props.destroy} submitButton="削除" />
+          <ReservationForm reservation={this.props.reservation} readOnly={true} handleSubmit={this.props.destroy} submitButton="削除" />
         </Modal>
       </div>
     );
@@ -79,21 +82,23 @@ class ReservationForm extends React.Component {
       <div>
         <div className="field form-group">
           <label htmlFor={this.props.prefix + "_start_at"}>予約開始日</label>
-          <input type="text" id={this.props.prefix + "_start_at"} className="form-control" readOnly={true} value={this.props.reservation.start_at} onFocus={this.props.selectStartAt} />
-          <PopDatePicker onSelect={ (year, month, day) => this.props.selectedStartAt(this.props.reservation, year, month, day)} popout={this.props.popout_start_at}/>
+          <input type="text" className="form-control" disabled={this.props.readOnly} readOnly={true} value={this.props.reservation.start_at} onFocus={this.props.selectStartAt} />
+          <PopDatePicker onSelect={ (year, month, day) => this.props.selectedStartAt(year, month, day)} popout={this.props.popout_start_at}/>
         </div>
         <div className="field form-group">
           <label htmlFor={this.props.prefix + "_end_at"}>予約終了日</label>
-          <input type="text" id={this.props.prefix + "_end_at"} className="form-control" readOnly={true} value={this.props.reservation.end_at} onFocus={this.props.selectEndAt}/>
-          <PopDatePicker onSelect={ (year, month, day) => this.props.selectedEndAt(this.props.reservation, year, month, day)} popout={this.props.popout_end_at}/>
+          <input type="text" className="form-control" disabled={this.props.readOnly} readOnly={true} value={this.props.reservation.end_at} onFocus={this.props.selectEndAt}/>
+          <PopDatePicker onSelect={ (year, month, day) => this.props.selectedEndAt(year, month, day)} popout={this.props.popout_end_at}/>
         </div>
         <div className="field form-group">
           <label htmlFor={this.props.prefix + "_usage"}>用途</label>
-          <input type="text" id={this.props.prefix + "_usage"} className="form-control" readOnly={this.props.readOnly} value={this.props.reservation.usage} onChange={(e) => this.props.onChangeUsage(this.props.reservation, e.target.value)}/>
+          <input type="text" className="form-control" disabled={this.props.readOnly} readOnly={this.props.readOnly} value={this.props.reservation.usage} onChange={(e) => this.props.onChangeUsage(e.target.value)}/>
         </div>
         <div className="field form-group">
-          <label htmlFor={this.props.prefix + "_guests"}>宿泊者</label>
-          <select id={this.props.prefix + "_guests"} className="form-control select2" multiple={true} readOnly={this.props.readOnly} />
+          <label htmlFor={this.props.prefix + "_guests"}>宿泊者</label><i className="far fa-plus-square" onClick={this.props.onAddGuest}></i>
+          {this.props.reservation.guests.map((guest, idx) => {
+            return <input key={"guest_" + idx} type="text" className="form-control" disabled={this.props.readOnly} readOnly={this.props.readOnly} value={guest} onChange={(e) => this.props.onChangeGuest(idx, e.target.value)}/>
+          })}
         </div>
         {submit}
       </div>
@@ -110,7 +115,6 @@ Reservation.propTypes = {
 
 ReservationForm.propTypes = {
   reservation: PropTypes.object,
-  prefix: PropTypes.string,
   submitButton: PropTypes.string,
   handleSubmit: PropTypes.func,
   readOnly: PropTypes.bool,
@@ -120,7 +124,9 @@ ReservationForm.propTypes = {
   selectedStartAt: PropTypes.func,
   selectEndAt: PropTypes.func,
   selectedEndAt: PropTypes.func,
-  onChangeUsage: PropTypes.func
+  onChangeUsage: PropTypes.func,
+  onChangeGuest: PropTypes.func,
+  onAddGuest: PropTypes.func
 }
 
 

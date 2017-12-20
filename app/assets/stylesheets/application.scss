@@ -25,7 +25,7 @@ body{
   -vendor-animation-duration: 0.1s;
   display: block;
   z-index: 8888;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);

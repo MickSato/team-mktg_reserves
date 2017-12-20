@@ -1,5 +1,5 @@
 // SET_COUNTERを追記
-import { SHOW_DETAIL, SHOW_CREATE, CREATE, SHOW_EDIT, EDIT, SHOW_DESTROY, DESTROY, CLOSE_MODAL, SET_INIT, SELECT_START_AT, SELECTED_START_AT, SELECT_END_AT, SELECTED_END_AT, CHANGE_USAGE } from '../actions/reservations';
+import { SHOW_DETAIL, SHOW_CREATE, CREATE, SHOW_EDIT, EDIT, SHOW_DESTROY, DESTROY, CLOSE_MODAL, SET_INIT, SELECT_START_AT, SELECTED_START_AT, SELECT_END_AT, SELECTED_END_AT, CHANGE_USAGE, CHANGE_GUEST, ADD_GUEST } from '../actions/reservations';
 
 export default function reducer(state, action) {
   switch (action.type) {
@@ -10,6 +10,7 @@ export default function reducer(state, action) {
     });
   case SHOW_CREATE:
     return Object.assign({}, state, {
+      reservation: {start_at: "", end_at: "", usage: "", guests: [""]},
       show_create: true
     });
   case CREATE:
@@ -67,6 +68,7 @@ export default function reducer(state, action) {
     });
   case SELECTED_START_AT:
     return Object.assign({}, state, {
+      reservation: Object.assign({}, state.reservation, {start_at: `${action.year}-${('00'+action.month).slice(-2)}-${('00'+action.day).slice(-2)}`}),
       popout_start_at: false
     });
   case SELECT_END_AT:
@@ -75,14 +77,24 @@ export default function reducer(state, action) {
     });
   case SELECTED_END_AT:
     return Object.assign({}, state, {
+      reservation: Object.assign({}, state.reservation, {end_at: `${action.year}-${('00'+action.month).slice(-2)}-${('00'+action.day).slice(-2)}`}),
       popout_end_at: false
     });
   case CHANGE_USAGE:
-    var reservation =Object.assign({}, state.reservation, {usage: action.usage});
-    console.log(3);
-    console.log(reservation);
     return Object.assign({}, state, {
       reservation: Object.assign({}, state.reservation, {usage: action.usage})
+    });
+  case CHANGE_GUEST:
+    var guests = state.reservation.guests.slice();
+    guests.splice(action.idx, 1, action.guest);
+    return Object.assign({}, state, {
+      reservation: Object.assign({}, state.reservation, {guests: guests})
+    });
+  case ADD_GUEST:
+    var guests = state.reservation.guests.slice();
+    guests.push("");
+    return Object.assign({}, state, {
+      reservation: Object.assign({}, state.reservation, {guests: guests})
     });
   default:
     return state;
